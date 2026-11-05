@@ -342,7 +342,7 @@ def main():
         ax1.text(XW * 0.65, ubs[k] + 0.35, "E%d" % (k + 1), color=cols[k])
     ax1.set_xlabel("x")
     ax1.set_ylabel("E")
-    ax1.set_title("Finite well: certified levels\n(bands = [lower, upper], dashed = analytic)")
+    ax1.set_title("Finite well: guaranteed levels\n(bands = [lower, upper], dashed = analytic)")
     for k in range(NLEV_W):
         ax2.plot([k + 1, k + 1], [(lbs[k] - E_ex_w[k]) * 1e3, (ubs[k] - E_ex_w[k]) * 1e3],
                  "-", color=cols[k], lw=6, solid_capstyle="butt", alpha=0.7)
@@ -363,7 +363,7 @@ def main():
     ax.loglog(hs, widths[-1, 0] * (hs / hs[-1]) ** 2, "k--", lw=0.8,
               label=r"slope 2 ($\propto h^2$)")
     ax.set_xlabel("h")
-    ax.set_ylabel("certified interval width")
+    ax.set_ylabel("interval width")
     ax.set_title("Convergence of the enclosures (finite well)")
     ax.legend(fontsize=8)
     ax.grid(True, which="both", alpha=0.3)
@@ -379,18 +379,18 @@ def main():
         ax1.plot(kk, bands_ex[:, n], "k.", ms=4)
         ax2.fill_between(kk, bands_lb_f[:, n], bands_ub_f[:, n], color=c, alpha=0.8)
         ax2.plot(kk, bands_ex[:, n], "k.", ms=4)
-    ax1.set_title("Coarse mesh (h = %.3g):\ncertified ribbons visible" % (LK / (10 * m_kp_coarse)))
+    ax1.set_title("Coarse mesh (h = %.3g):\ninterval ribbons visible" % (LK / (10 * m_kp_coarse)))
     ax2.set_title("Fine mesh (h = %.3g):\nwidth ~ %.0e" % (LK / (10 * m_kp_fine),
                   np.max(bands_ub_f - bands_lb_f)))
     for ax in (ax1, ax2):
         ax.set_xlabel(r"$kL/\pi$")
         ax.grid(alpha=0.3)
     ax1.set_ylabel("E")
-    ax2.annotate("certified gap 1\n>= %.3f" % gap1_lb,
+    ax2.annotate("gap 1\n>= %.3f (guaranteed)" % gap1_lb,
                  xy=(1.0, 0.5 * (bands_ub_f[i_pi, 0] + bands_lb_f[i_pi, 1])),
                  xytext=(0.55, 0.5 * (bands_ub_f[i_pi, 0] + bands_lb_f[i_pi, 1])),
                  fontsize=8, arrowprops=dict(arrowstyle="->", lw=0.8))
-    fig.suptitle("Kronig-Penney: certified band structure (black dots = analytic dispersion)")
+    fig.suptitle("Kronig-Penney: guaranteed band enclosures (black dots = analytic dispersion)")
     fig.tight_layout()
     fig.savefig(os.path.join(OUT, "fig_kp_bandes.png"), dpi=300)
 

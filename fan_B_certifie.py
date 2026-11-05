@@ -48,7 +48,7 @@ def main():
                          color="C%d" % (k % 10), alpha=0.75)
     ax1.set_xlabel("B")
     ax1.set_ylabel("E")
-    ax1.set_title("Certified magneto-spectroscopic fan\n"
+    ax1.set_title("Magneto-spectroscopic fan with guaranteed bounds\n"
                   "(square dot, 8 levels, ribbons = guaranteed intervals, h = %.4g)"
                   % (m.L / N))
     ax1.grid(alpha=0.3)
@@ -59,7 +59,7 @@ def main():
     ax2.axhline(0.0, color="k", lw=0.6)
     ax2.set_xlabel("B")
     ax2.set_ylabel(r"$E_3 - E_2$")
-    ax2.set_title("Certified degeneracy lifting\n(1,2)/(2,1) pair")
+    ax2.set_title("Splitting of the (1,2)/(2,1) pair\n(guaranteed interval)")
     ax2.grid(alpha=0.3)
     fig.tight_layout()
     fig.savefig(os.path.join(OUT, "fig2d_eventail_B.png"), dpi=300)

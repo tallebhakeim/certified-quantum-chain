@@ -18,8 +18,8 @@ certifie DGM ; ici le champ est analytique donc delta est exact).
 
 LEMME DE PROPAGATION (le pont classique->quantique) : pour tout k,
     | sqrt(E_k(A)) - sqrt(E_k(A')) | <= ||A - A'||_inf.
-Preuve min-max + Young : ||(-i grad - A)u||^2 <= (1+eps)||(-i grad - A')u||^2
-+ (1+1/eps) delta^2 ||u||^2, optimisation en eps => (sqrt(E') + delta)^2.
+Preuve : inegalite triangulaire ||(-i grad - A)u|| <= ||(-i grad - A')u|| + delta ||u||,
+puis principe min-max applique aux racines carrees.
 Donc  E_k(A_true) appartient a [ (sqrt(lb_k) - delta)^2, (sqrt(ub_k) + delta)^2 ]
 ou [lb_k, ub_k] est l'encadrement certifie de E_k(A*).
 
@@ -30,7 +30,7 @@ CERTIFICATION 2D de H* = (-i grad - A*)^2 :
     constante C_h explicite par dualite. Ingredients, tous demontres
     elementairement sur maillage carre uniforme (interpolation Q1 tensorisee,
     Pi0 = projection L2 par element, Poincare/Wirtinger 1D de constante h/pi) :
-       || grad(z - I_h z) ||      <= sqrt2 (h/pi)   || D2 z ||
+       || grad(z - I_h z) ||      <= (h/pi)         || D2 z ||
        || z - I_h z ||            <= sqrt3 (h/pi)^2 || D2 z ||
        || D2 z || <= || Lap z ||   (domaine convexe, Dirichlet, Grisvard)
        E_1(H*) >= 2 pi^2 / L^2     (inegalite diamagnetique, L = 2w)
@@ -39,7 +39,7 @@ CERTIFICATION 2D de H* = (-i grad - A*)^2 :
        ||grad z|| <= ||phi|| (1/sqrt(f+s) + aoo/(f+s)),   aoo = ||A*||_inf
        ||Lap z|| <= K_s ||phi||,
        K_s = 1 + 2 aoo (1/sqrt(f+s) + aoo/(f+s)) + (aoo^2 + s)/(f+s)
-       C_h(s) = [ sqrt2 h/pi + (aoo + sqrt(s)) sqrt3 (h/pi)^2 ] K_s
+       C_h(s) = [ h/pi + (aoo + sqrt(s)) sqrt3 (h/pi)^2 ] K_s
     et on prend le max des bornes sur une grille de s (chacune est valide).
 
 Validation : reference numerique fine (Q1 + extrapolation de Richardson)
@@ -158,15 +158,19 @@ def eig_low(A, M, nev):
 # Borne inferieure de Liu (constantes 2D explicites, decalage optimise)
 # ----------------------------------------------------------------------
 
-def liu_lower_2d(lam_h, h, aoo, floor, s_grid):
-    best = -np.inf
+def liu_lower_2d(lam_h, h, aoo, floor, s_grid, return_s=False):
+    best, s_best = -np.inf, None
     for s in s_grid:
         fs = floor + s
         Ks = 1.0 + 2.0 * aoo * (1.0 / np.sqrt(fs) + aoo / fs) + (aoo * aoo + s) / fs
-        Ch = (np.sqrt(2.0) * h / PI
+        Ch = (h / PI
               + (aoo + np.sqrt(s)) * np.sqrt(3.0) * (h / PI) ** 2) * Ks
         lam_s = lam_h + s
-        best = max(best, lam_s / (1.0 + Ch * Ch * lam_s) - s)
+        lb = lam_s / (1.0 + Ch * Ch * lam_s) - s
+        if lb > best:
+            best, s_best = lb, s
+    if return_s:
+        return best, s_best
     return best
 
 
@@ -286,11 +290,11 @@ def main():
         ax.plot([1.8, 2.2], [refs["H_true"][k]] * 2, "k-", lw=1)
         ax.plot([2.8, 3.2], [refs["H_true"][k]] * 2, "k-", lw=1.5)
     ax.set_xticks([1.0, 2.0, 3.0])
-    ax.set_xticklabels(["certified H*\n(uniform field)",
+    ax.set_xticklabels(["bounds for\nuniform field",
                         "propagated intervals\n(+/- delta on A)",
                         "fine reference\ntrue field"])
     ax.set_ylabel("E")
-    ax.set_title("Certified classical-to-quantum chain (B0=%.0f, delta=%.3f)\n"
+    ax.set_title("Uniform-field bounds transported to the true field (B0=%.0f, delta=%.3f)\n"
                  "black bars = fine numerical references" % (B0, DELTA))
     fig.tight_layout()
     fig.savefig(os.path.join(OUT, "fig2d_echelle_niveaux.png"), dpi=300)
@@ -302,7 +306,7 @@ def main():
         ax.loglog(hs, widths[:, j], "o-", label="%s (slope %.2f)" % (labs[j], slopes[j]))
     ax.loglog(hs, widths[-1, 0] * (hs / hs[-1]) ** 2, "k--", lw=0.8, label=r"slope 2")
     ax.set_xlabel("h")
-    ax.set_ylabel("certified width")
+    ax.set_ylabel("interval width")
     ax.set_title("Convergence of the enclosures (H*)")
     ax.legend(fontsize=8)
     ax.grid(True, which="both", alpha=0.3)

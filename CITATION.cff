@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "If you use this code, please cite it as below."
+title: "certified-quantum-chain: Guaranteed two-sided eigenvalue bounds for the magnetic Schrodinger operator with an inexactly known vector potential"
+version: 2.0.0
+date-released: 2026-11-05
+license: MIT
+repository-code: "https://github.com/tallebhakeim/certified-quantum-chain"
+authors:
+  - family-names: Talleb
+    given-names: Hakeim
+    orcid: "https://orcid.org/0000-0002-2734-6242"
+    affiliation: "Sorbonne Université, CNRS, GeePs, Paris ; Université Paris-Saclay, CentraleSupélec, CNRS, GeePs, Gif-sur-Yvette"

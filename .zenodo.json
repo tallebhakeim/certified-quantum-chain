@@ -1,0 +1,22 @@
+{
+  "title": "certified-quantum-chain: Guaranteed two-sided eigenvalue bounds for the magnetic Schrodinger operator with an inexactly known vector potential",
+  "description": "Python code for the manuscript 'Guaranteed two-sided eigenvalue bounds for the magnetic Schrodinger operator with an inexactly known vector potential' by H. Talleb, submitted to the Journal of Computational and Applied Mathematics. Guaranteed lower and upper bounds for the eigenvalues of the magnetic Schrodinger operator (Q1 Rayleigh-Ritz and Liu's lower bound with explicit constants), transfer of the bounds to an inexactly known vector potential, application to the field of a current loop. Reproduces every table and figure.",
+  "creators": [
+    {
+      "name": "Talleb, Hakeim",
+      "affiliation": "Sorbonne Université, CNRS, GeePs, Paris ; Université Paris-Saclay, CentraleSupélec, CNRS, GeePs, Gif-sur-Yvette",
+      "orcid": "0000-0002-2734-6242"
+    }
+  ],
+  "license": "MIT",
+  "upload_type": "software",
+  "version": "2.0.0",
+  "keywords": [
+    "eigenvalue bounds",
+    "lower bounds",
+    "magnetic Schrodinger operator",
+    "finite element method",
+    "explicit interpolation constants",
+    "perturbation of eigenvalues"
+  ]
+}

@@ -60,7 +60,7 @@ MR = 20001                                # grille en r
 def aphi_enclose(rs):
     """Encadrement [lo, hi] de A_phi(r) pour un tableau de rayons rs < R."""
     dm = (R_LOOP - RMAX) ** 2
-    fpp = dm ** -0.5 + 3 * R_LOOP * RMAX * dm ** -1.5 \
+    fpp = dm ** -0.5 + 2 * R_LOOP * RMAX * dm ** -1.5 \
         + 3 * (R_LOOP * RMAX) ** 2 * dm ** -2.5
     quaderr = PREF * (2 * PI) ** 3 * fpp / (12.0 * MTH ** 2)
     th = np.linspace(0.0, 2 * PI, MTH + 1)
@@ -110,6 +110,8 @@ def main():
     lbs = np.array([m.liu_lower_2d(v, h, aoo, m.FLOOR, m.S_GRID) for v in ubs])
     print("H*(Bbar) certifie n=256 : res alg %.1e  [%.1fs]" % (res, time.time() - t))
 
+    for k in range(m.NEV):
+        print("  H*(Bbar) k=%d : [%.6f, %.6f]" % (k + 1, lbs[k], ubs[k]))
     prop_lb = np.maximum(np.sqrt(np.maximum(lbs, 0.0)) - DELTA, 0.0) ** 2
     prop_ub = (np.sqrt(ubs) + DELTA) ** 2
 
@@ -153,7 +155,7 @@ def main():
     ax1.set_xlabel("r")
     ax1.set_ylabel(r"$(A_\varphi - \bar B r/2) \times 10^3$")
     ax1.set_title("Gauge deviation: loop vs uniform field\n"
-                  r"$\bar B$ = %.4f, certified $\delta$ = %.5f (equioscillation)"
+                  r"$\bar B$ = %.4f, guaranteed $\delta$ = %.5f"
                   % (BBAR, DELTA))
     ax1.grid(alpha=0.3)
     for k in range(m.NEV):
@@ -165,9 +167,9 @@ def main():
         ax2.plot([1.8, 2.2], [ref[k]] * 2, "k-", lw=1)
         ax2.plot([2.8, 3.2], [ref[k]] * 2, "k-", lw=1.5)
     ax2.set_xticks([1.0, 2.0, 3.0])
-    ax2.set_xticklabels(["certified\nH*(Bbar)", "propagated\n(loop)", "fine reference\n(loop)"])
+    ax2.set_xticklabels(["bounds for\nuniform field", "bounds for\nloop field", "fine reference\n(loop field)"])
     ax2.set_ylabel("E")
-    ax2.set_title("Real current loop: end-to-end guaranteed spectrum")
+    ax2.set_title("Current loop: guaranteed eigenvalue intervals")
     fig.tight_layout()
     fig.savefig(os.path.join(OUT, "fig2d_spire_chaine.png"), dpi=300)
     print("Figure : fig2d_spire_chaine.png")

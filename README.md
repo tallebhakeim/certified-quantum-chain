@@ -1,69 +1,51 @@
-# Certified chain from coil geometry to quantum spectra
+# Guaranteed eigenvalue bounds for the magnetic Schrodinger operator
 
-Python implementation accompanying the manuscript:
+Code for the manuscript
 
-> H. Talleb, *A certified chain from coil geometry to quantum spectra:
-> guaranteed two-sided eigenvalue bounds for the magnetic Schrödinger
-> operator*, submitted to Computer Physics Communications (COMPHY-D-26-00722).
+> H. Talleb, *Guaranteed two-sided eigenvalue bounds for the magnetic Schrodinger operator with an inexactly known vector potential*, Journal of Computational and Applied Mathematics (submitted).
 
-Every table and figure of the paper is reproduced by the scripts below.
-All bounds printed as `[lower, upper]` are mathematically guaranteed
-enclosures (see the paper for the analysis); each script ends with a
-containment self-test against analytic spectra or fine numerical references
-and prints `PASS`/`FAIL`.
+The code computes intervals that contain the eigenvalues of (-i grad - A)^2 with
+Dirichlet conditions on a square: upper bounds by the conforming Q1 Rayleigh-Ritz
+method with exact quadrature, lower bounds by Liu's theorem with the explicit
+constant of Theorem 2 of the manuscript, and transfer of the bounds to an
+inexactly known vector potential (Lemma 1). It reproduces every table and figure.
 
 ## Requirements
 
-Python >= 3.9 with `numpy`, `scipy`, `matplotlib` (see `requirements.txt`).
-No other dependency; no compiled code. Tested on macOS with Python 3.9.
+Python 3.9 or later, numpy, scipy, matplotlib (`pip install -r requirements.txt`).
+
+## Reproduce
 
 ```
-pip install -r requirements.txt
+bash run_all.sh
 ```
 
-## Scripts
+Each script ends with a check that the exact or reference eigenvalues lie in the
+computed intervals and prints PASS or FAIL. Total run time: about 3 minutes on a laptop.
 
-| Script | What it does | Paper items | Runtime* |
-|--------|--------------|-------------|----------|
-| `poc_schrodinger_certifie.py` | 1D certified bounds: finite well (vs analytic transfer matrices) + Kronig-Penney Bloch bands and certified gaps | Table 1, Figs. 2-4 | ~1 min |
-| `poc_schrodinger_magnetique_2d.py` | 2D magnetic operator: Rayleigh-Ritz upper + Liu lower bounds with explicit tensorized constants; propagation lemma demo (2 % synthetic field bulge); certified diamagnetic shift and degeneracy lifting | Table 2, Figs. 5, 6, 9 | ~2 min |
-| `fan_B_certifie.py` | Certified magneto-spectroscopic fan, B = 0..10 (imports the 2D module) | Fig. 7 | ~1 min |
-| `brique_bobine_certifiee.py` | Real coplanar current loop: rigorous Biot-Savart enclosure, equioscillating reference field, end-to-end certified spectrum (imports the 2D module) | Table 3, Fig. 8 | ~1 min |
-| `fig_bridge.py` | Conceptual schematic (classical-quantum bridge) | Fig. 1 | seconds |
-| `gfx_abstract.py` | Graphical abstract | - | seconds |
+| Script | Manuscript |
+|---|---|
+| `exemple_a_la_main.py` | Section 4, Table 1 (worked example) |
+| `poc_schrodinger_certifie.py` | Section 5.1, Table 2, Figs. 1-2 (finite well, Kronig-Penney) |
+| `poc_schrodinger_magnetique_2d.py` | Section 5.2, Algorithm 1, Table 3, Fig. 3 |
+| `fan_B_certifie.py` | Section 5.2, Fig. 4 (fields 0 to 10) |
+| `brique_bobine_certifiee.py` | Section 6, Algorithm 2, Table 4, Fig. 5 (current loop) |
 
-*Indicative, on a laptop; the 2D scripts assemble complex Hermitian Q1
-matrices up to 512 x 512 meshes and use `scipy.sparse.linalg.eigsh`
-(shift-invert).
+Main functions: `liu_lower_2d` (lower bound of Theorem 2 and Remark 2),
+`liu_lower` (one-dimensional constant), `assemble_2d` (Q1 matrices with the exact
+5 x 5 Gauss rule), `aphi_enclose` (enclosure of the Biot-Savart integral).
 
-Run each script from its own directory, e.g.:
+## Versions
 
-```
-python3 poc_schrodinger_certifie.py
-python3 poc_schrodinger_magnetique_2d.py
-python3 fan_B_certifie.py
-python3 brique_bobine_certifiee.py
-```
+- v2.0.0 (2026-11-05): version of the JCAM submission. Gradient interpolation constant
+  h/pi (proved in Lemma 2), sharper bound of the second derivative in the
+  Biot-Savart quadrature error, worked example added.
+- Earlier unversioned upload: code of a previous submission.
 
-Figures (PNG, 300 dpi) are written next to the scripts.
+## Citation
 
-## Structure of the certification (pointers into the code)
+See `CITATION.cff`.
 
-* Upper bounds: conforming Rayleigh-Ritz with exact Gauss quadrature,
-  `assemble_2d` / `eig_low` in `poc_schrodinger_magnetique_2d.py`.
-* Lower bounds: Liu's framework with fully explicit constants,
-  `liu_lower_2d` (2D, tensorized interpolation constants sqrt(2) h/pi and
-  sqrt(3) (h/pi)^2, convexity, diamagnetic floor, optimized spectral shift)
-  and `liu_lower` (1D) in `poc_schrodinger_certifie.py`.
-* Propagation lemma |sqrt(E_k(A)) - sqrt(E_k(A'))| <= ||A - A'||_inf:
-  applied in both 2D scripts (`prop_lb`, `prop_ub`).
-* Rigorous Biot-Savart enclosure (composite trapezoid + explicit f''
-  majorant + floating-point inflation): `aphi_enclose` in
-  `brique_bobine_certifiee.py`.
+## License
 
-## Reserves
-
-Linear algebra runs in floating point; algebraic eigenresidua (~1e-10) are
-printed with every result and are at least four orders of magnitude below
-all certified widths. Closing this last gap with interval arithmetic and
-verified eigensolvers is standard and modular (see the paper, Section 6).
+MIT, see `LICENSE`.
