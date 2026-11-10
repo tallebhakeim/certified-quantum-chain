@@ -44,6 +44,8 @@ Main functions: `liu_lower_2d` (lower bound of Theorem 2 and Remark 2),
 
 ## Citation
 
+Archived on Zenodo: concept DOI https://doi.org/10.5281/zenodo.24117325 (all versions); this version: https://doi.org/10.5281/zenodo.24117326.
+
 See `CITATION.cff`.
 
 ## License

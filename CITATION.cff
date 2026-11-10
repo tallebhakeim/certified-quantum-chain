@@ -10,3 +10,8 @@ authors:
     given-names: Hakeim
     orcid: "https://orcid.org/0000-0002-2734-6242"
     affiliation: "Sorbonne Université, CNRS, GeePs, Paris ; Université Paris-Saclay, CentraleSupélec, CNRS, GeePs, Gif-sur-Yvette"
+doi: 10.5281/zenodo.24117326
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.24117325
+    description: Concept DOI (all versions)
